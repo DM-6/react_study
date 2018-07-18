@@ -1,13 +1,38 @@
 import React, { Component } from 'react';
-import Note from './Note'
+import Note from './Note';
+import { db, loadCollection } from '../database';
 
 class Notes extends Component{
+    constructor(props){    // 构造函数  使用constructor构造函数，加上super（必需）  让父类（component)执行一下构造函数  继承问题
+        super(props)
+        this.getInitialData()
+    }
+    getInitialData(){
+        loadCollection('notes')
+            .then(collection => {
+                // console.log(collection);
+                // collection.insert([
+                //     {
+                //         text: 'hello ~'
+                //     },
+                //     {
+                //         text: 'halo ~'
+                //     }
+                // ]);
+                // db.saveDatabase();    // 保存
+                const entities = collection.chain()     // chain 打开链
+                    .find()     // 查找
+                    .simplesort('$loki', 'isdesc')   // 简单排序 按ID倒序排序   $loki表示ID
+                    .data()
+                // console.log(entities);
+                this.setState({
+                    entities
+                })
+            })
+    }
     // state vue data 
     state = {
-        entities: [
-            '邪不压正，如何？',
-            '我不是药神，印度什么药都有'
-        ]
+        entities: []
     }
     render(){
         // react 独有的jsx 模板引擎  在js里直接写html 
@@ -15,7 +40,7 @@ class Notes extends Component{
         // html -> js node 是会被编译成js的， 、
         const entities = this.state.entities;
         const noteItems = entities.map((entity, index) => 
-            <Note key={index} entity={ entity } destoryEntity={ this.destoryEntity}/>
+            <Note key={ entity.$loki } entity={ entity } destoryEntity={ this.destoryEntity.bind(this) }/>
         )
         // console.log(noteItems);
         return (
@@ -39,9 +64,36 @@ class Notes extends Component{
     }
     createEntry(){
         console.log(this.state.entities);
+        loadCollection('notes')
+            .then((collection) => {
+                const entity = collection.insert({
+                    text: ''
+                })
+                db.saveDatabase();
+                this.setState((prevState) => {
+                    const _entities = prevState.entities;
+                    _entities.unshift(entity);     // 将记录推到最前面 第一个
+                    return {
+                        entities: _entities
+                    }
+                })
+            })
     }
     destoryEntity(entity){
         console.log(entity);
+        const _entities = this.state.entities.filter((_entity) => {    // 过滤满足条件不需要的
+            return _entity.$loki !== entity.$loki    // $loki ID   
+        });
+
+        this.setState({
+            entities: _entities
+        })
+
+        loadCollection('notes')
+            .then((collection) => {
+                collection.remove(entity)
+                db.saveDatabase()
+            })
     }
 }
 
