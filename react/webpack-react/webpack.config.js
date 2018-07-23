@@ -32,13 +32,27 @@ module.exports = {
                     'postcss-loader',
                     'stylus-loader'
                 ]
+            },
+            {   
+                test: /\.(png|svg|jpg|gif)$/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            name: 'static/css/images/[name].[hash:8].[ext]'
+                        }
+                    }
+                ]
+                
             }
         ]
     },
     plugins: [
         new MiniCssExtractPlugin({
             filename: 'static/css/[name].css',
-            chunkFilename: 'static/css[id].css'   // 文件块
+            chunkFilename: 'static/css[id].css',  // 文件块
+            // filename: '[name].[chunkhash].css',
+            // chunkFilename: '[id].css'   // 文件块
         }),
         new HtmlWebpackPlugin({
             file: 'index.html',
