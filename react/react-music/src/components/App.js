@@ -4,8 +4,9 @@ import Ranking from './ranking/Ranking';
 import Search from './search/Search';
 import { BrowserRouter as Router, Route, Switch, Redirect, NavLink  } from 'react-router-dom';
 import '@/assets/stylus/reset.styl';
+import MusicPlayer from '@/components/play/MusicPlayer';
 import logo from "@/assets/imgs/logo.png";
-import MiniPlayer from '../containers/MiniPlayer';
+// import MiniPlayer from '../containers/MiniPlayer';
 import './App.styl';
 
 class App extends Component {
@@ -43,7 +44,8 @@ class App extends Component {
               <Route component={Recommend}/>
             </Switch>
           </div>
-          <MiniPlayer/>
+          {/* <MiniPlayer/> */}
+          <MusicPlayer/>
         </div>
       </Router>
     );
