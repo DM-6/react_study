@@ -1,0 +1,15 @@
+{
+  "name": "umi_app",
+  "version": "1.0.0",
+  "description": "1. umi 极快，内置了react react-router 以约定代替，简化代码 pages/ 组件即路由",
+  "main": ".umirc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "umi-plugin-datahub": "^0.1.1"
+  }
+}
